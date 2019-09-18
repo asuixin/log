@@ -1,0 +1,10 @@
+<seelog>
+    <outputs formatid="main">
+        <filter levels="info,warn,error,critical">
+            <file path="./test.log"/>
+        </filter>
+    </outputs>
+    <formats>
+        <format id="main" format="%Date %Time %LEVEL %Func %Msg%n"/>
+    </formats>
+</seelog>
