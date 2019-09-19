@@ -12,40 +12,28 @@ var x int = 0
 var m sync.Mutex
 var gpath string
 
-func InitLog(path string) error {
-
-	logger, err := log.LoggerFromConfigAsFile(path)
-	if err != nil {
-		return err
-	}
-	err = log.ReplaceLogger(logger)
-	if err != nil {
-		return err
-	}
-	gpath = path
-	return nil
-
-}
-func Reload() error {
+func LogInit() error {
 
 	logger, err := log.LoggerFromConfigAsFile(gpath)
 	if err != nil {
 		return err
 	}
-
 	err = log.ReplaceLogger(logger)
 	if err != nil {
 		return err
 	}
-	defer log.Flush()
 	return nil
+
+}
+func LogReload() error {
+	return LogInit()
 }
 
 func main() {
 
 	var wg sync.WaitGroup
-
-	err := InitLog("./config.xml")
+	gpath = "./config.xml"
+	err := LogInit()
 	if err != nil {
 		fmt.Println("InitLog err:", err)
 		return
@@ -68,7 +56,7 @@ func main() {
 	wg.Add(1)
 	go func() {
 		for {
-			if err := Reload(); err != nil {
+			if err := LogReload(); err != nil {
 				fmt.Println("reload failed:", err)
 				return
 			}
